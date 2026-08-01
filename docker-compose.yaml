@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # 1. Servicio de Base de Datos MySQL
+  db:
+    image: mysql:8.0
+    container_name: biblioteca_db
+    environment:
+      MYSQL_DATABASE: biblioteca_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db-dump/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    restart: always
+
+  # 2. Servicio del Backend (Spring Boot)
+  backend:
+    build: ./backend
+    container_name: biblioteca_backend
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URI: jdbc:mysql://db:3306/biblioteca_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_DRIVER: com.mysql.cj.jdbc.Driver
+    depends_on:
+      - db
+    restart: always
+
+  # 3. Servicio del Frontend (React + Nginx)
+  frontend:
+    build: ./frontend
+    container_name: biblioteca_frontend
+    ports:
+      - "80:80"
+    environment:
+      VITE_API_URL: http://localhost:8080/api
+    depends_on:
+      - backend
+    restart: always
