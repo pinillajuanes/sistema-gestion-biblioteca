@@ -106,4 +106,4 @@ El repositorio incluye la carpeta `db-dump/` con el archivo de respaldo `schema.
 ## 📄 Licencia
 
 Este proyecto fue desarrollado con fines educativos y como parte de una prueba técnica.  
-© 2025 - Todos los derechos reservados.
+© 2026 - Todos los derechos reservados.
